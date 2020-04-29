@@ -11,3 +11,31 @@
 	model = "Rockchip RK3288 Asus Tinker Board";
 	compatible = "asus,rk3288-tinker", "rockchip,rk3288";
 };
+
+&mipi_dsi {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	ports {
+		mipi_out: port@1 {
+			reg = <1>;
+
+			mipi_out_panel: endpoint {
+				remote-endpoint = <&mipi_in_panel>;
+			};
+		};
+	};
+
+	panel@0 {
+		compatible = "waveshare,dsi-lcd-43";
+		reg = <0>;
+		power-supply = <&vcc33_mipi>;
+
+		port {
+			mipi_in_panel: endpoint {
+				remote-endpoint = <&mipi_out_panel>;
+			};
+		};
+	};
+};
