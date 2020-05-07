@@ -220,14 +220,17 @@ dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
 			    const struct drm_display_mode *mode)
 {
 	struct drm_display_info *info = &connector->display_info;
-	int max_tmds_clock = max(info->max_tmds_clock, 165000);
+	int max_tmds_clock = info->max_tmds_clock > 0 ?
+				     max(info->max_tmds_clock, 165000) :
+				     340000;
+
 	int clock = mode->clock;
 
 	if (connector->ycbcr_420_allowed && drm_mode_is_420(info, mode) &&
 	    (info->color_formats & DRM_COLOR_FORMAT_YCRCB420))
 		clock /= 2;
 
-	if (clock > max_tmds_clock || clock > 340000)
+	if (clock > max_tmds_clock)
 		return MODE_CLOCK_HIGH;
 
 	return MODE_OK;
